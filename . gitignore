@@ -1,0 +1,5 @@
+venv/
+__pycache__/
+*.pyc
+*.log
+*.sqlite  # If you're using SQLite for your database
