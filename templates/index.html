@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+</head>
+<body>
+    <form method="post">
+        <input type="text" name="city" placeholder="Enter city" required>
+        <input type="submit" value="Get Weather">
+    </form>
+
+    {% if weather_data %}
+        <h1>Weather in {{ weather_data.city }}</h1>
+        <h2>{{ weather_data.temperature }}°K</h2>
+        <p>{{ weather_data.description }}</p>
+        <img src="http://openweathermap.org/img/w/{{ weather_data.icon }}.png" alt="{{ weather_data.description }}">
+    {% elif city %}
+        <h2>Weather data not found for {{ city }}</h2>
+    {% endif %}
+</body>
+</html>

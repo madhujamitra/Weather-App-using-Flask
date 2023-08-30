@@ -1,24 +1,40 @@
-# from flask import Flask, render_template
-# from flask_sqlalchemy import SQLAlchemy
+import warnings
+warnings.simplefilter("ignore")
 
-# app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-# db = SQLAlchemy(app)
-
-# class User(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(80), unique=True, nullable=False)
-
-# @app.route('/')
-# def home():
-#     return render_template('home.html', name='Flask')
-from flask import Flask
+from flask import Flask, render_template, request
+import requests
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return "Hello, World!"
+API_KEY = '638e7bc2198602666c9eb8d5ead695e6'
+BASE_URL = 'http://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
+
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    weather_data = None
+    city = None
+
+    if request.method == 'POST':
+        city = request.form.get('city')
+        response = requests.get(BASE_URL.format(city, API_KEY))
+        print(response.text)
+        data = response.json()
+
+        if data['cod'] == 200:
+            weather_data = {
+                'city': data['name'],
+                'temperature': data['main']['temp'],
+                'description': data['weather'][0]['description'],
+                'icon': data['weather'][0]['icon']
+            }
+
+    return render_template('index.html', weather_data=weather_data, city=city)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+
+
